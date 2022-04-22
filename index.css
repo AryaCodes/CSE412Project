@@ -1,0 +1,28 @@
+html {
+    font-family: Roboto, Helvetica, sans-serif;
+}
+
+section{
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+button{
+    margin-top: 15px;
+}
+
+header{
+    margin-left: 10px;
+    margin-top: 10px;
+
+}
+
+
+
+form-label{
+    align-self: flex-start;
+}
+
+p {
+    font-size: 20px;    
+}
