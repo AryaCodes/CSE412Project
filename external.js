@@ -34,6 +34,9 @@ function user_signup() {
     var signup_age = document.getElementById("signup_age").value;
     var signup_income = document.getElementById("signup_income").value;
 
+    signup_age = parseInt(signup_age);
+    signup_income = parseInt(signup_income);
+
     var email_is_unique = true;
     // Query here that checks if a user with this email already exists. If it does set email_is_unique to false.
 
