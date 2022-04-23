@@ -1,5 +1,12 @@
-var user_email;
+import "./css/styles.css";
 
+var user_email;
+window.user_login = user_login;
+window.user_signup = user_signup;
+window.user_update = user_update;
+window.display_user_info = display_user_info;
+window.deposit = deposit;
+window.withdraw = withdraw;
 
 function user_login() {
     var login_email = document.getElementById("login_email").value;
@@ -143,7 +150,7 @@ function deposit(params) {
     // alert("Here");
 }
 
-function wihdraw(params) {
+function withdraw(params) {
     var account_id = document.getElementById("trans_account_id").value;
     var amount = document.getElementById("trans_amount").value;
 
@@ -169,5 +176,12 @@ function wihdraw(params) {
 }
 
 
-
+module.exports = {
+    user_login,
+    user_signup,
+    user_update,
+    display_user_info,
+    deposit,
+    withdraw
+}
 
