@@ -1,5 +1,3 @@
-const db_conn = require('../js/connectToDB')
-
 var user_email;
 
 
@@ -7,7 +5,7 @@ function user_login() {
     var login_email = document.getElementById("login_email").value;
     var login_password = document.getElementById("login_password").value;
     console.log(login_email);
-    console.log(db_conn.test())
+    // console.log()
     // var email_is_valid = await db_conn.confirmUser(login_email, login_password);
     var email_is_valid = true;
     // Write the sql query here that checks the email and password against the ones in our database. 
@@ -169,10 +167,6 @@ function wihdraw(params) {
     }
 
     // alert("Here");
-}
-
-module.exports = {
-    'user_login': user_login
 }
 
 

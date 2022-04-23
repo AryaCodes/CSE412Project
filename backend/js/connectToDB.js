@@ -1,16 +1,19 @@
 const { Client } = require('pg');
 
-const client = new Client({
+
+
+function confirmUser(email,pword){
+
+  const client = new Client({
     user: 'postgres',
     host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
     database: 'cse412-bank',
     password: 'cse412-password',
     port: 5432,
-});
+  });
 
-client.connect();
+  client.connect();
 
-function confirmUser(email,pword){
   const query = `
   SELECT * FROM users WHERE email='${email}' AND upassword='${pword}';
   `
