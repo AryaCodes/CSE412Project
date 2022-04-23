@@ -1,7 +1,5 @@
 const { Client } = require('pg');
 
-
-
 function confirmUser(email,pword){
 
   const client = new Client({
