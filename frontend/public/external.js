@@ -209,10 +209,46 @@ return axios.get(`http://localhost:5000/db/userlogin/${email}-${password}`)
   })
 }
 
+function uniqueEmail(email){
+  
+  return axios.get(`http://localhost:5000/db/userexists/${email}`)
+    .then(function (response) {
+      // handle success
+      if(response.data){
+        return false
+      } else {
+        return true
+      }
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+}
+
+
+function createUser(email,pword, name, address, age, income){
+  return axios.post('http://localhost:5000/db/usercreate/', {
+    email: email,
+    password: pword,
+    name: name,
+    address: address,
+    age: age,
+    income: income
+  })
+  .then(function (response) {
+    return response
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 
 module.exports = {
-  confirmUser
+  confirmUser,
+  createUser,
+  uniqueEmail
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -227,10 +263,7 @@ async function user_login() {
     // console.log()
     let email_is_valid = await dbReq.confirmUser(login_email, login_password);
     console.log(email_is_valid)
-    // var email_is_valid = true;
-    // Write the sql query here that checks the email and password against the ones in our database. 
-    // If it is valid then set the above email_is_valid to True else False.
-    // For the query you can use login_email and login_password.
+
 
     if(email_is_valid){
         // console.log("Here");
@@ -246,7 +279,7 @@ async function user_login() {
 
 }
 
-function user_signup() {
+async function user_signup() {
     var signup_email = document.getElementById("signup_email").value;
     var signup_password = document.getElementById("signup_password").value;
     var signup_confirm_password = document.getElementById("signup_confirm_password").value;
@@ -258,7 +291,7 @@ function user_signup() {
     signup_age = parseInt(signup_age);
     signup_income = parseInt(signup_income);
 
-    var email_is_unique = true;
+    var email_is_unique = await dbReq.uniqueEmail(signup_email);
     // Query here that checks if a user with this email already exists. If it does set email_is_unique to false.
 
     var passwords_match = true;
@@ -271,8 +304,16 @@ function user_signup() {
     {
         //Query here that creates a new row in the User table with the above extracted data.
         // alert("Here!");
-        user_email = signup_email;
-        window.location.href = "user.html";
+
+        let create_status = await dbReq.createUser(signup_email, signup_password, signup_name, signup_address, signup_age, signup_income)
+        console.log(create_status.data)
+        if(create_status.data){
+            user_email = signup_email;
+            window.location.href = "user.html";
+        } else {
+            alert("DB error");
+        }
+        
     }
     else if(!email_is_unique)
     {
@@ -390,7 +431,8 @@ function wihdraw(params) {
 }
 
 module.exports = {
-    user_login
+    user_login,
+    user_signup
 }
 
 

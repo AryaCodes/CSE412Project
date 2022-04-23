@@ -1,5 +1,6 @@
 const express = require('express')
 var cors = require('cors')
+const bodyParser = require("body-parser");
 
 const app = express()
 const port = 5000
@@ -9,6 +10,9 @@ const dbRouter = require('./routes/dbRouter')
 let corsOptions = {
   origin : ['http://localhost:3000'],
 }
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(cors(corsOptions))
 
