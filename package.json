@@ -1,0 +1,22 @@
+{
+  "name": "cse412project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AryaCodes/CSE412Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AryaCodes/CSE412Project/issues"
+  },
+  "homepage": "https://github.com/AryaCodes/CSE412Project#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
