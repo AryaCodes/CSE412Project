@@ -95,8 +95,104 @@ function createUser(email,pword, name, address, age, income){
   })
 }
 
+function getUserACC(email){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  select * from acc_holders where uemail='${email}';
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function getAccount(accID){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  select * from accounts where accountid='${accID}';
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function getBank(bankID){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  select * from banks where bankid='${bankID}';
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
-  confirmExists
+  confirmExists,
+  getUserACC,
+  getAccount,
+  getBank
 }

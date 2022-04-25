@@ -26,3 +26,8 @@ form-label{
 p {
     font-size: 20px;    
 }
+
+.bankAccounts{
+    border:1px solid black;
+    width:15em;
+}

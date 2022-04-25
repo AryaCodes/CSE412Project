@@ -57,9 +57,21 @@ function createUser(email,pword, name, address, age, income){
   });
 }
 
+function getAccountsForUser(email){
+  return axios.get(`http://localhost:5000/db/userAcc/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
 
 module.exports = {
   confirmUser,
   createUser,
-  uniqueEmail
+  uniqueEmail,
+  getAccountsForUser
 }

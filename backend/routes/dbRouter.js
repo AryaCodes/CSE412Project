@@ -1,6 +1,7 @@
 const db_conn = require('../js/connectToDB')
 
 const express = require('express')
+const { info } = require('console')
 const router = express.Router()
 
 
@@ -30,6 +31,29 @@ router.post('/usercreate', async (req, res) => {
   
     console.log(user_status)
   res.send(user_status)
+})
+
+router.get('/userAcc/:email', async (req, res) => {
+
+  user_acc = await db_conn.getUserACC(req.params.email)
+  let info = []
+
+  if(user_acc != undefined && user_acc.length > 0){
+    for(acc of user_acc){
+      accountInfo = await db_conn.getAccount(acc.accid)
+      bankInfo = await db_conn.getBank(accountInfo[0].bankid)
+
+      info.push({
+        'bankName':bankInfo[0].name,
+        'accountId':accountInfo[0].accountid,
+        'balance':accountInfo[0].balance
+      })
+    }
+  }
+
+  console.log(info)
+  // res.send(user_acc)
+  res.send(info)
 })
 
 

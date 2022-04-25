@@ -244,11 +244,23 @@ function createUser(email,pword, name, address, age, income){
   });
 }
 
+function getAccountsForUser(email){
+  return axios.get(`http://localhost:5000/db/userAcc/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
 
 module.exports = {
   confirmUser,
   createUser,
-  uniqueEmail
+  uniqueEmail,
+  getAccountsForUser
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -270,6 +282,8 @@ async function user_login() {
         user_email = login_email;
         // alert("User " + user_email +" has logged in.");
         window.location.href = "user.html";
+
+        localStorage.setItem("userEmail",login_email);
     }
 
     else
@@ -429,6 +443,41 @@ function wihdraw(params) {
 
     // alert("Here");
 }
+
+function apply() {
+    var bank_id = document.getElementById("bank_id_apply").value;
+
+    //I don't really know how the apply for credit card works but this is where the queries would go.
+}
+
+async function loadAccounts(email){
+    // confirm.log(email)
+    userAccounts = await dbReq.getAccountsForUser(email);
+    // console.log(userAccounts)
+    
+    bankContainer = document.getElementById('bankAccountsList')
+    
+    if(userAccounts.length == 0){
+        bankContainer.innerHTML += "<p>This user has no active bank accounts!</p>"                                                                                                                                                                                                                                                             
+    }
+
+    
+    for(account of userAccounts){
+        bankContainer.innerHTML +=
+            `<div class="bankAccounts">
+            <p>Bank: ${account.bankName}</p>
+            <p>Account Num: ${account.accountId}</p>
+            <p>Balance: $${account.balance}</p>
+            </div>`
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    userEmail = localStorage.getItem("userEmail")
+    if(window.location.href == "http://localhost:3000/user.html" && userEmail != null){
+        loadAccounts(userEmail)
+    }
+}, false);
 
 module.exports = {
     user_login,
