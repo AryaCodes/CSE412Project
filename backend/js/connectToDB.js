@@ -262,6 +262,101 @@ function linkAccount(email, accountId){
   })
 }
 
+function hasAccount(email, accId){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  select * from acc_holders where uemail='${email}' and accid=${accId};
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows.length > 0
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function deposit(accId, amt){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  UPDATE accounts SET balance = balance + ${amt} WHERE accountid = ${accId};
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function recordTransaction(email, accountId, amt, transType){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  insert into transactions (uemail, accid, type, amount) values ('${email}', ${accountId}, '${transType}', ${amt});
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    console.log(res)
+    return true
+  })
+  .catch(err => {
+    console.log(err)
+    console.log('There was a problem with the db')
+    return false
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
@@ -270,5 +365,8 @@ module.exports = {
   getAccount,
   getBank,
   createAccount,
-  linkAccount
+  linkAccount,
+  hasAccount,
+  deposit,
+  recordTransaction
 }

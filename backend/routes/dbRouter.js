@@ -82,4 +82,33 @@ router.post('/createBankAccount', async (req, res) => {
   }
 })
 
+router.post('/deposit', async (req, res) => {
+  console.log(req.body)
+  // confirm this user has account
+  let confirmAcc = await db_conn.hasAccount(req.body.email, req.body.accId)
+  
+  if(!confirmAcc){
+    res.send({'status': -1, 'msg': 'This user does not own this account!'})
+  }
+
+  // if they do, do the deposit
+  let depositStatus = await db_conn.deposit(req.body.accId, req.body.amt)
+
+  if(!depositStatus){
+    res.send({'status': -1, 'msg': 'There was an error depositing the funds!'})
+  }
+
+  // save the transaction in the transactions table
+  let transactionStatus = await db_conn.recordTransaction(req.body.email, req.body.accId, req.body.amt, 'deposit')
+
+  if(!depositStatus){
+    res.send({'status': -1, 'msg': 'There was an error depositing the funds!'})
+  }
+  
+  // return the bank account number
+  console.log(depositStatus)
+  res.send({'status': 0, 'msg': `Deposited $${req.body.amt} into acc #${req.body.accId}`})
+
+})
+
 module.exports = router

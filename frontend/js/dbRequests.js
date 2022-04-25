@@ -97,11 +97,29 @@ function createBankAccount(email, bankid, accType){
   })
 }
 
+function deposit(email, accId, amt){
+  return axios.post(`http://localhost:5000/db/deposit/`, {
+    email: email,
+    accId: accId,
+    amt: amt
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+
 module.exports = {
   confirmUser,
   createUser,
   uniqueEmail,
   getAccountsForUser,
   getBanks,
-  createBankAccount
+  createBankAccount,
+  deposit
 }

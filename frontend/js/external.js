@@ -135,27 +135,21 @@ function display_user_info(params) {
     // alert("Here");
 }
 
-function deposit(params) {
+async function deposit(params) {
     var account_id = document.getElementById("trans_account_id").value;
     var amount = document.getElementById("trans_amount").value;
-
-    var acc_is_linked = true;
-    //Write a query here that checks the account is linked to the user in the has table. if not make this false.
-
-
-    if(!acc_is_linked)
-    {
-        alert("this account isn't linked")
-    }
-    else
-    {
-        //Write a query here that updates the accounts amount (presumably defaulted to zero at some point)
+    
+    if(amount < 0){
+        alert('Cannot deposit less than $0.0!');
+        return
     }
 
-    // alert("Here");
+    let depositStatus = await dbReq.deposit(user_email, account_id, amount)
+    
+    alert(depositStatus.msg)
 }
 
-function wihdraw(params) {
+function withdraw(params) {
     var account_id = document.getElementById("trans_account_id").value;
     var amount = document.getElementById("trans_amount").value;
 
@@ -258,12 +252,17 @@ document.addEventListener('DOMContentLoaded', function() {
         loadBanks()
     }
 
+    if(window.location.href == "http://localhost:3000/transaction.html" && userEmail != null){
+        loadAccounts(userEmail)
+    }
+
 }, false);
 
 module.exports = {
     user_login,
     user_signup,
-    link_acct
+    link_acct,
+    deposit
 }
 
 
