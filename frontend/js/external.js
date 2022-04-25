@@ -255,7 +255,7 @@ async function loadAccounts(email){
             `<div class="bankAccounts">
             <p>Bank: ${account.bankName}</p>
             <p>Account Num: ${account.accountId}</p>
-            <p>Balance: $${account.balance}</p>
+            <p>Balance: $${account.balance.toFixed(2)}</p>
             </div>`
     }
 }

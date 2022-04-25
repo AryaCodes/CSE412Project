@@ -73,7 +73,7 @@ router.get('/userInfo/:email', async (req, res) => {
 router.get('/transactions/:email', async (req, res) => {
   let info = await db_conn.getTransactions(req.params.email)
   console.log(info)
-  
+
   res.send(info)
 })
 
@@ -88,7 +88,7 @@ router.post('/createBankAccount', async (req, res) => {
   // return the bank account number
   if(link_account){
     console.log(bankAccountID)
-    res.send({'accId': bankAccountID.accountid})
+    res.send({'msg': `You have created: account #${bankAccountID.accountid}`})
   }
   else{
     console.log('errror')
