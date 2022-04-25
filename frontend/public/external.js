@@ -430,6 +430,7 @@ async function user_signup() {
         console.log(create_status.data)
         if(create_status.data){
             user_email = signup_email;
+            localStorage.setItem("userEmail",signup_email);
             window.location.href = "user.html";
         } else {
             alert("DB error");
