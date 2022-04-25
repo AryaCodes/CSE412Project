@@ -13,10 +13,12 @@
         <h1>our_Site_Name</h1>
     </header>
     <section>
-        <h3>Bank ID</h3>
-        <input type="text">
+        <div class="form-group">
+            <label for="bank_id_apply" class="form-label">Bank Id</label>
+            <input type="text" class="form-control" id="bank_id_apply" aria-describedby="emailHelp" placeholder="Enter bank_id" required>
+          </div>
         <br/>
-        <button>Apply for Credit Card</button>
+        <button class="btn btn-outline-primary" onclick="apply()">Apply for Credit Card</button>
     </section>
 </body>
 </html>

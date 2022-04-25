@@ -177,6 +177,12 @@ function wihdraw(params) {
     // alert("Here");
 }
 
+function apply() {
+    var bank_id = document.getElementById("bank_id_apply").value;
+
+    //I don't really know how the apply for credit card works but this is where the queries would go.
+}
+
 module.exports = {
     user_login,
     user_signup
