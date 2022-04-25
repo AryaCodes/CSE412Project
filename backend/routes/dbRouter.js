@@ -70,6 +70,13 @@ router.get('/userInfo/:email', async (req, res) => {
   res.send(info)
 })
 
+router.get('/transactions/:email', async (req, res) => {
+  let info = await db_conn.getTransactions(req.params.email)
+  console.log(info)
+  
+  res.send(info)
+})
+
 router.post('/createBankAccount', async (req, res) => {
   console.log(req.body)
   // create the bank account

@@ -343,6 +343,18 @@ function applyForCard(email, bankId){
   })
 }
 
+function getTransactions(email){
+  return axios.get(`http://localhost:5000/db/transactions/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 
 module.exports = {
   confirmUser,
@@ -354,7 +366,8 @@ module.exports = {
   deposit,
   withdraw,
   getUserInfo,
-  applyForCard
+  applyForCard,
+  getTransactions
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -619,6 +632,30 @@ async function loadAccounts(email){
     }
 }
 
+async function loadTransactions(){
+    let transactionsList = await dbReq.getTransactions(user_email);
+    // console.log(userAccounts)
+    console.log(transactionsList)
+    transactionsContainer = document.getElementById('transactionList')
+    
+    if(transactionsList.length == 0){
+        bankContainer.innerHTML += "<p>There are no transactions</p>"                                                                                                                                                                                                                                                             
+    }
+
+    
+    for(transaction of transactionsList){
+        transactionsContainer.innerHTML +=
+            `<div class="transaction">
+            <p>Email: ${transaction.uemail}</p>
+            <p>Account Id: ${transaction.accid}</p>
+            <p>Transaction Id: ${transaction.transactionid}</p>
+            <p>Type: ${transaction.type}</p>
+            <p>Amount: ${transaction.amount}</p>     
+            </div>`
+    } 
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     userEmail = localStorage.getItem("userEmail")
     user_email = localStorage.getItem("userEmail")
@@ -638,6 +675,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if(window.location.href == "http://localhost:3000/apply.html" && userEmail != null){
         getUserInfo()
         loadBankCredits()
+    }
+
+    if(window.location.href == "http://localhost:3000/transactionHistory.html" && userEmail != null){
+        getUserInfo()
+        loadTransactions()
     }
 
     

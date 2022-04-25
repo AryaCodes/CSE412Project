@@ -156,6 +156,18 @@ function applyForCard(email, bankId){
   })
 }
 
+function getTransactions(email){
+  return axios.get(`http://localhost:5000/db/transactions/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 
 module.exports = {
   confirmUser,
@@ -167,5 +179,6 @@ module.exports = {
   deposit,
   withdraw,
   getUserInfo,
-  applyForCard
+  applyForCard,
+  getTransactions
 }
