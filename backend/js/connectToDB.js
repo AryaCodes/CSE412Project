@@ -31,6 +31,37 @@ function confirmUser(email,pword){
   })
 }
 
+function getUserInfo(email){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  SELECT * FROM users WHERE email='${email}';
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return res.rows[0]
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
 function confirmExists(email,pword){
 
   const client = new Client({
@@ -437,5 +468,6 @@ module.exports = {
   deposit,
   withdraw,
   recordTransaction,
-  enoughFunds
+  enoughFunds,
+  getUserInfo
 }

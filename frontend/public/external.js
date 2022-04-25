@@ -316,6 +316,33 @@ function withdraw(email, accId, amt){
   })
 }
 
+function getUserInfo(email){
+  return axios.get(`http://localhost:5000/db/userInfo/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+function applyForCard(email, bankId){
+  return axios.post(`http://localhost:5000/db/applyForCard/`, {
+    email: email,
+    bankId: bankId,
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 
 module.exports = {
   confirmUser,
@@ -325,7 +352,9 @@ module.exports = {
   getBanks,
   createBankAccount,
   deposit,
-  withdraw
+  withdraw,
+  getUserInfo,
+  applyForCard
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -497,23 +526,18 @@ async function link_acct() {
     var bank_id = document.getElementById("bank_id").value;
     var acct_type = document.getElementById("acct_type").value;
 
-    let status = await dbReq.createBankAccount(user_email, bank_id, acct_type)
+    let linkStatus = await dbReq.createBankAccount(user_email, bank_id, acct_type)
     
-    if(status.accId != -1){
-        alert(`Account has been created! Account Number: ${status.accId}`)
-    }
-    else{
-        alert(`There was an error creating your account! Try again`)
-    }
-    console.log(status)
-    
+    alert(linkStatus.msg)
 
 }
 
-function apply() {
+async function apply() {
     var bank_id = document.getElementById("bank_id_apply").value;
 
-    //I don't really know how the apply for credit card works but this is where the queries would go.
+    let applyStatus = await dbReq.applyForCard(user_email, bank_id)
+    
+    alert(applyStatus.msg)
 }
 
 async function loadBanks(){
@@ -532,9 +556,45 @@ async function loadBanks(){
             `<div class="bankName">
             <p>Bank: ${bank.name}</p>
             <p>Address: ${bank.address}</p>
-            <p>Bank ID: ${bank.bankid}</p>            
+            <p>Bank ID: ${bank.bankid}</p>        
             </div>`
     } 
+}
+
+async function loadBankCredits(){
+    banksPossible = await dbReq.getBanks();
+    // console.log(userAccounts)
+    console.log(banksPossible)
+    bankContainer = document.getElementById('bankOptions')
+    
+    if(banksPossible.length == 0){
+        bankContainer.innerHTML += "<p>There are no banks</p>"                                                                                                                                                                                                                                                             
+    }
+
+    
+    for(bank of banksPossible){
+        bankContainer.innerHTML +=
+            `<div class="bankName">
+            <p>Bank: ${bank.name}</p>
+            <p>Address: ${bank.address}</p>
+            <p>Bank ID: ${bank.bankid}</p>
+            <p>Min income to open credit card: ${bank.credit_min}</p>          
+            </div>`
+    } 
+}
+
+async function getUserInfo(){
+    let info = await dbReq.getUserInfo(user_email);
+    // console.log(userAccounts)
+    console.log(info)
+    infoContainer = document.getElementById('yourStatus')
+    
+    infoContainer.innerHTML +=
+        `<div class="bankName">
+        <p>Name: ${info.name}</p>
+        <p>Age: ${info.age}</p>
+        <p>Income: ${info.rep_income}</p> 
+        </div>`
 }
 
 async function loadAccounts(email){
@@ -575,6 +635,13 @@ document.addEventListener('DOMContentLoaded', function() {
         loadAccounts(userEmail)
     }
 
+    if(window.location.href == "http://localhost:3000/apply.html" && userEmail != null){
+        getUserInfo()
+        loadBankCredits()
+    }
+
+    
+
 }, false);
 
 module.exports = {
@@ -582,7 +649,8 @@ module.exports = {
     user_signup,
     link_acct,
     deposit,
-    withdraw
+    withdraw,
+    apply
 }
 
 

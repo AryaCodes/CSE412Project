@@ -63,6 +63,13 @@ router.get('/banks', async (req, res) => {
   res.send(banks)
 })
 
+router.get('/userInfo/:email', async (req, res) => {
+  let info = await db_conn.getUserInfo(req.params.email)
+  console.log(info)
+
+  res.send(info)
+})
+
 router.post('/createBankAccount', async (req, res) => {
   console.log(req.body)
   // create the bank account
@@ -151,6 +158,31 @@ router.post('/withdraw', async (req, res) => {
   // return the bank account number
   console.log(withdrawalStatus)
   res.send({'status': 0, 'msg': `withdrawing $${req.body.amt} from acc #${req.body.accId}`})
+
+})
+
+router.post('/applyForCard', async (req, res) => {
+  console.log(req.body)
+  // confirm this bank is real
+  let bankId = await db_conn.getBank(req.body.bankId)
+  
+  if(bankId.length <= 0){
+    res.send({'status': -1, 'msg': 'This is not a real bank!'})
+    return
+  }
+
+  // get the user
+  let userInfo = await db_conn.getUserInfo(req.body.email)
+
+  let qualifiesForAccount = bankId[0].credit_min <= userInfo.rep_income
+
+  if(!qualifiesForAccount){
+    res.send({'status': -1, 'msg': 'You do not make enough to qualify!'})
+    return
+  }
+  
+  console.log(qualifiesForAccount)
+  res.send({'status': 0, 'msg': `you qualify to open a credit card at "${bankId[0].name}" please go in person to do so.`})
 
 })
 

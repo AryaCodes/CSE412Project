@@ -129,6 +129,33 @@ function withdraw(email, accId, amt){
   })
 }
 
+function getUserInfo(email){
+  return axios.get(`http://localhost:5000/db/userInfo/${email}`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+function applyForCard(email, bankId){
+  return axios.post(`http://localhost:5000/db/applyForCard/`, {
+    email: email,
+    bankId: bankId,
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 
 module.exports = {
   confirmUser,
@@ -138,5 +165,7 @@ module.exports = {
   getBanks,
   createBankAccount,
   deposit,
-  withdraw
+  withdraw,
+  getUserInfo,
+  applyForCard
 }

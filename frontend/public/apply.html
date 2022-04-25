@@ -18,7 +18,15 @@
             <input type="text" class="form-control" id="bank_id_apply" aria-describedby="emailHelp" placeholder="Enter bank_id" required>
           </div>
         <br/>
-        <button class="btn btn-outline-primary" onclick="apply()">Apply for Credit Card</button>
+        <button class="btn btn-outline-primary" onclick="dbConn.apply()">Apply for Credit Card</button>
     </section>
+    <div id="yourStatus">
+        <p>Your information:</p>
+    </div>
+
+    <div id="bankOptions">
+        <p>Current banks for user:</p>
+    </div>
+    <script src="external.js"></script>
 </body>
 </html>
