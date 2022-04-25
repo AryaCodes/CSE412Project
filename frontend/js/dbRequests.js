@@ -69,9 +69,39 @@ function getAccountsForUser(email){
   })
 }
 
+function getBanks(){
+  return axios.get(`http://localhost:5000/db/banks/`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+function createBankAccount(email, bankid, accType){
+  return axios.post(`http://localhost:5000/db/createBankAccount/`, {
+    email: email,
+    bankId: bankid,
+    accType: accType
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
   uniqueEmail,
-  getAccountsForUser
+  getAccountsForUser,
+  getBanks,
+  createBankAccount
 }

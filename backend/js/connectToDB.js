@@ -157,7 +157,7 @@ function getAccount(accID){
   })
 }
 
-function getBank(bankID){
+function getBank(bankID='NOBANK'){
 
   const client = new Client({
     user: 'postgres',
@@ -169,9 +169,17 @@ function getBank(bankID){
 
   client.connect();
 
-  const query = `
+  let query = ""
+  if(bankID=='NOBANK'){
+    query = `
+    select * from banks;
+    `
+  }
+  else{ 
+    query = `
   select * from banks where bankid='${bankID}';
   `
+}
   console.log(query)
 
   return client
@@ -188,11 +196,79 @@ function getBank(bankID){
   })
 }
 
+function createAccount(bankID, accType){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  insert into accounts (balance, type, bankid) values (0.0, '${accType}', ${bankID}) RETURNING accountid;
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    console.log(res)
+    return res.rows[0]
+  })
+  .catch(err => {
+    console.log(err)
+    console.log('There was a problem with the db')
+    return false
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function linkAccount(email, accountId){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  insert into acc_holders (uemail, accid) values ('${email}', ${accountId});
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    console.log(res)
+    return true
+  })
+  .catch(err => {
+    console.log(err)
+    console.log('There was a problem with the db')
+    return false
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
   confirmExists,
   getUserACC,
   getAccount,
-  getBank
+  getBank,
+  createAccount,
+  linkAccount
 }

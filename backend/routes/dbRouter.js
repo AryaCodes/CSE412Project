@@ -56,6 +56,30 @@ router.get('/userAcc/:email', async (req, res) => {
   res.send(info)
 })
 
+router.get('/banks', async (req, res) => {
+  banks = await db_conn.getBank()
+  console.log(banks)
 
+  res.send(banks)
+})
+
+router.post('/createBankAccount', async (req, res) => {
+  console.log(req.body)
+  // create the bank account
+  let bankAccountID = await db_conn.createAccount(req.body.bankId, req.body.accType)
+  
+  // link the account to the user
+  link_account = await db_conn.linkAccount(req.body.email, bankAccountID.accountid)
+
+  // return the bank account number
+  if(link_account){
+    console.log(bankAccountID)
+    res.send({'accId': bankAccountID.accountid})
+  }
+  else{
+    console.log('errror')
+    res.send({'accId': -1})
+  }
+})
 
 module.exports = router

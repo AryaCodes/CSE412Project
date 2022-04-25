@@ -256,11 +256,41 @@ function getAccountsForUser(email){
   })
 }
 
+function getBanks(){
+  return axios.get(`http://localhost:5000/db/banks/`)
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+function createBankAccount(email, bankid, accType){
+  return axios.post(`http://localhost:5000/db/createBankAccount/`, {
+    email: email,
+    bankId: bankid,
+    accType: accType
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
   uniqueEmail,
-  getAccountsForUser
+  getAccountsForUser,
+  getBanks,
+  createBankAccount
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -407,6 +437,7 @@ function deposit(params) {
     var acc_is_linked = true;
     //Write a query here that checks the account is linked to the user in the has table. if not make this false.
 
+
     if(!acc_is_linked)
     {
         alert("this account isn't linked")
@@ -427,7 +458,7 @@ function wihdraw(params) {
     //Write a query here that checks the account is linked to the user in the has table. if not make this false.
     var has_enough_money = true;
     //Write a query to check if the account has enough money. if not make this false
-
+    
     if(!acc_is_linked)
     {
         alert("this account isn't linked")
@@ -444,10 +475,48 @@ function wihdraw(params) {
     // alert("Here");
 }
 
+async function link_acct() {
+    var bank_id = document.getElementById("bank_id").value;
+    var acct_type = document.getElementById("acct_type").value;
+
+    let status = await dbReq.createBankAccount(user_email, bank_id, acct_type)
+    
+    if(status.accId != -1){
+        alert(`Account has been created! Account Number: ${status.accId}`)
+    }
+    else{
+        alert(`There was an error creating your account! Try again`)
+    }
+    console.log(status)
+    
+
+}
+
 function apply() {
     var bank_id = document.getElementById("bank_id_apply").value;
 
     //I don't really know how the apply for credit card works but this is where the queries would go.
+}
+
+async function loadBanks(){
+    banksPossible = await dbReq.getBanks();
+    // console.log(userAccounts)
+    console.log(banksPossible)
+    bankContainer = document.getElementById('bankOptions')
+    
+    if(banksPossible.length == 0){
+        bankContainer.innerHTML += "<p>There are no banks</p>"                                                                                                                                                                                                                                                             
+    }
+
+    
+    for(bank of banksPossible){
+        bankContainer.innerHTML +=
+            `<div class="bankName">
+            <p>Bank: ${bank.name}</p>
+            <p>Address: ${bank.address}</p>
+            <p>Bank ID: ${bank.bankid}</p>            
+            </div>`
+    } 
 }
 
 async function loadAccounts(email){
@@ -474,14 +543,22 @@ async function loadAccounts(email){
 
 document.addEventListener('DOMContentLoaded', function() {
     userEmail = localStorage.getItem("userEmail")
+    user_email = localStorage.getItem("userEmail")
+
     if(window.location.href == "http://localhost:3000/user.html" && userEmail != null){
         loadAccounts(userEmail)
     }
+
+    if(window.location.href == "http://localhost:3000/link_bank_acct.html" && userEmail != null){
+        loadBanks()
+    }
+
 }, false);
 
 module.exports = {
     user_login,
-    user_signup
+    user_signup,
+    link_acct
 }
 
 
