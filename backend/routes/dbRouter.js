@@ -89,6 +89,7 @@ router.post('/deposit', async (req, res) => {
   
   if(!confirmAcc){
     res.send({'status': -1, 'msg': 'This user does not own this account!'})
+    return
   }
 
   // if they do, do the deposit
@@ -96,18 +97,60 @@ router.post('/deposit', async (req, res) => {
 
   if(!depositStatus){
     res.send({'status': -1, 'msg': 'There was an error depositing the funds!'})
+    return
   }
 
   // save the transaction in the transactions table
   let transactionStatus = await db_conn.recordTransaction(req.body.email, req.body.accId, req.body.amt, 'deposit')
 
-  if(!depositStatus){
+  if(!transactionStatus){
     res.send({'status': -1, 'msg': 'There was an error depositing the funds!'})
+    return
   }
   
   // return the bank account number
   console.log(depositStatus)
   res.send({'status': 0, 'msg': `Deposited $${req.body.amt} into acc #${req.body.accId}`})
+
+})
+
+router.post('/withdraw', async (req, res) => {
+  console.log(req.body)
+  // confirm this user has account
+  let confirmAcc = await db_conn.hasAccount(req.body.email, req.body.accId)
+  
+  if(!confirmAcc){
+    res.send({'status': -1, 'msg': 'This user does not own this account!'})
+    return
+  }
+
+  // make sure they have enough funds
+  let enoughFunds = await db_conn.enoughFunds(req.body.amt, req.body.accId)
+
+  if(!enoughFunds){
+    res.send({'status': -1, 'msg': 'You do not have enough funds to make this withdrawal!'})
+    return
+  }
+
+  // if they do, do the withdrawal
+  let withdrawalStatus = await db_conn.withdraw(req.body.accId, req.body.amt)
+
+  if(!withdrawalStatus){
+    res.send({'status': -1, 'msg': 'There was an error withdrawing the funds!'})
+    return
+  }
+
+  // save the transaction in the transactions table
+  let transactionStatus = await db_conn.recordTransaction(req.body.email, req.body.accId, req.body.amt, 'withdrawal')
+
+  if(!transactionStatus){
+    res.send({'status': -1, 'msg': 'There was an error withdrawing the funds!'})
+    return
+  }
+  
+  // return the bank account number
+  console.log(withdrawalStatus)
+  res.send({'status': 0, 'msg': `withdrawing $${req.body.amt} from acc #${req.body.accId}`})
 
 })
 

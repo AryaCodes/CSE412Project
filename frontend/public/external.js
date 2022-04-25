@@ -300,6 +300,23 @@ function deposit(email, accId, amt){
   })
 }
 
+function withdraw(email, accId, amt){
+  return axios.post(`http://localhost:5000/db/withdraw/`, {
+    email: email,
+    accId: accId,
+    amt: amt
+  })
+  .then(function (response) {
+    // handle success
+    return response.data
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+}
+
+
 module.exports = {
   confirmUser,
   createUser,
@@ -307,7 +324,8 @@ module.exports = {
   getAccountsForUser,
   getBanks,
   createBankAccount,
-  deposit
+  deposit,
+  withdraw
 }
 },{"axios":4}],3:[function(require,module,exports){
 dbReq = require("../js/dbRequests")
@@ -461,29 +479,18 @@ async function deposit(params) {
     alert(depositStatus.msg)
 }
 
-function withdraw(params) {
+async function withdraw() {
     var account_id = document.getElementById("trans_account_id").value;
     var amount = document.getElementById("trans_amount").value;
 
-    var acc_is_linked = true;
-    //Write a query here that checks the account is linked to the user in the has table. if not make this false.
-    var has_enough_money = true;
-    //Write a query to check if the account has enough money. if not make this false
-    
-    if(!acc_is_linked)
-    {
-        alert("this account isn't linked")
-    }
-    else if(!has_enough_money)
-    {
-        alert("The account doesn't have enough money")
-    }
-    else
-    {
-        //Write a query here that updates the accounts amount (presumably defaulted to zero at some point)
+    if(amount < 0){
+        alert('Cannot withdraw less than $0.0!');
+        return
     }
 
-    // alert("Here");
+    let withdrawalStatus = await dbReq.withdraw(user_email, account_id, amount)
+    
+    alert(withdrawalStatus.msg)
 }
 
 async function link_acct() {
@@ -574,7 +581,8 @@ module.exports = {
     user_login,
     user_signup,
     link_acct,
-    deposit
+    deposit,
+    withdraw
 }
 
 

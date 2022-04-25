@@ -313,11 +313,44 @@ function deposit(accId, amt){
   return client
   .query(query)
   .then(res => {
-    return res.rows
+    return true
   })
   .catch(err => {
     console.log('There was a problem with the db')
     console.log(err)
+    return false
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
+function withdraw(accId, amt){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  UPDATE accounts SET balance = balance - ${amt} WHERE accountid = ${accId};
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    return true
+  })
+  .catch(err => {
+    console.log('There was a problem with the db')
+    console.log(err)
+    return false
   })
   .finally(() => {
     client.end()
@@ -357,6 +390,40 @@ function recordTransaction(email, accountId, amt, transType){
   })
 }
 
+function enoughFunds(amt, accountId){
+
+  const client = new Client({
+    user: 'postgres',
+    host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+    database: 'cse412-bank',
+    password: 'cse412-password',
+    port: 5432,
+  });
+
+  client.connect();
+
+  const query = `
+  select balance from accounts where accountid = ${accountId};
+  `
+  console.log(query)
+
+  return client
+  .query(query)
+  .then(res => {
+    console.log(res)
+    let currentBalance = res.rows[0].balance
+    return amt <= currentBalance
+  })
+  .catch(err => {
+    console.log(err)
+    console.log('There was a problem with the db')
+    return false
+  })
+  .finally(() => {
+    client.end()
+  })
+}
+
 module.exports = {
   confirmUser,
   createUser,
@@ -368,5 +435,7 @@ module.exports = {
   linkAccount,
   hasAccount,
   deposit,
-  recordTransaction
+  withdraw,
+  recordTransaction,
+  enoughFunds
 }
