@@ -33,6 +33,20 @@ router.post('/usercreate', async (req, res) => {
   res.send(user_status)
 })
 
+//added by WH {
+
+router.post('/userupdate', async (req, res) => {
+    console.log(req.body)
+    user_status = await db_conn.updateUserInfo(req.body.email,
+        req.body.password,
+        req.body.name, req.body.address, req.body.age, req.body.income)
+
+    console.log(user_status)
+    res.send(user_status)
+})
+
+// }
+
 router.get('/userAcc/:email', async (req, res) => {
 
   user_acc = await db_conn.getUserACC(req.params.email)

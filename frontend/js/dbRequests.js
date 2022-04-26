@@ -141,6 +141,27 @@ function getUserInfo(email){
   })
 }
 
+// Added by WH {
+
+function updateUserInfo(email, pword, name, address, age, income) {
+    return axios.post('http://localhost:5000/db/userupdate/', {
+        email: email,
+        password: pword,
+        name: name,
+        address: address,
+        age: age,
+        income: income
+    })
+    .then(function (response) {
+        return response
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+}
+
+// }
+
 function applyForCard(email, bankId){
   return axios.post(`http://localhost:5000/db/applyForCard/`, {
     email: email,
@@ -172,6 +193,7 @@ function getTransactions(email){
 module.exports = {
   confirmUser,
   createUser,
+  updateUserInfo,
   uniqueEmail,
   getAccountsForUser,
   getBanks,

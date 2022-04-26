@@ -62,6 +62,41 @@ function getUserInfo(email){
   })
 }
 
+// added by WH {
+
+function updateUserInfo(email, pword, name, address, age, income) {
+
+    const client = new Client({
+        user: 'postgres',
+        host: 'cse412-bank-app.ceyczuyfxexi.us-west-1.rds.amazonaws.com',
+        database: 'cse412-bank',
+        password: 'cse412-password',
+        port: 5432,
+    });
+
+    client.connect();
+
+    const query = `UPDATE users SET upassword='${pword}', name='${name}', address='${address}', age='${age}', rep_income='${income}' WHERE email='${email}'`
+
+    console.log(query)
+
+    return client
+        .query(query)
+        .then(res => {
+            return true
+            // return res.rows.length > 0
+        })
+        .catch(err => {
+            console.log('There was a problem with the db')
+            return false
+        })
+        .finally(() => {
+            client.end()
+        })
+}
+
+// }
+
 function getTransactions(email){
 
   const client = new Client({
@@ -501,5 +536,6 @@ module.exports = {
   recordTransaction,
   enoughFunds,
   getUserInfo,
-  getTransactions
+   getTransactions,
+   updateUserInfo
 }

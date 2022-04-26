@@ -54,8 +54,8 @@ async function user_signup() {
         //Query here that creates a new row in the User table with the above extracted data.
         // alert("Here!");
 
-        let create_status = await dbReq.createUser(signup_email, signup_password, signup_name, signup_address, signup_age, signup_income)
-        console.log(create_status.data)
+        let create_status = await dbReq.createUser(signup_email, signup_password, signup_name, signup_address, signup_age, signup_income);
+        console.log(create_status.data);
         if(create_status.data){
             user_email = signup_email;
             localStorage.setItem("userEmail",signup_email);
@@ -80,7 +80,7 @@ async function user_signup() {
 
 }
 
-function user_update(){
+async function user_update(){
     var update_password = document.getElementById("update_password").value;
     var update_confirm_password = document.getElementById("update_confirm_password").value;
     var update_name = document.getElementById("update_name").value;
@@ -88,7 +88,8 @@ function user_update(){
     var update_age = document.getElementById("update_age").value;
     var update_income = document.getElementById("update_income").value;
 
-    // alert("here");
+    update_age = parseInt(update_age);
+    update_income = parseInt(update_income);
 
     var passwords_match = true;
     if(update_password != update_confirm_password)
@@ -99,7 +100,9 @@ function user_update(){
     if(passwords_match)
     {
         // Update the user information here using the global variable user_email as email and the above as other fields.
-        // alert("Here!");
+        let update_status = await dbReq.updateUserInfo(user_email, update_password, update_name, update_address, update_age, update_income);
+        console.log(update_status.data);
+        alert("Information updated");
         window.location.href = "user.html";
     }
     else if(!passwords_match)
@@ -113,9 +116,9 @@ function user_update(){
 
 }
 
-function display_user_info(params) {
+async function display_user_info() {
     var update_password = "Default";
-    var update_confirm_password = "Default";
+    var update_confirm_password = "";
     var update_name = "Default";
     var update_address = "Default";
     var update_age = "Default";
@@ -123,8 +126,15 @@ function display_user_info(params) {
 
     //Query here that extracts the above info from database using user_email as primary key.
     // Save them in the above vars
-
-    // alert("Here");
+    let info = await dbReq.getUserInfo(user_email);
+    console.log(info)
+    if (info) {
+        update_password = info.upassword;
+        update_name = info.name;
+        update_address = info.address;
+        update_age = info.age;
+        update_income = info.rep_income;
+    }
 
     document.getElementById("update_password").value = update_password;
     document.getElementById("update_confirm_password").value= update_confirm_password;
@@ -132,6 +142,8 @@ function display_user_info(params) {
     document.getElementById("update_address").value = update_address;
     document.getElementById("update_age").value = update_age;
     document.getElementById("update_income").value = update_income;
+
+    alert("Current user account info displayed");
 
     // alert("Here");
 }
@@ -321,7 +333,9 @@ module.exports = {
     link_acct,
     deposit,
     withdraw,
-    apply
+    apply,
+    user_update,
+    display_user_info
 }
 
 
