@@ -1,0 +1,31 @@
+markz@gmail.com	1	1	deposit	12.32
+sockmann2@gmail.com	1	2	deposit	12
+sockmann2@gmail.com	1	4	deposit	12
+sockmann2@gmail.com	15	5	deposit	12
+sockmann2@gmail.com	16	6	deposit	12
+sockmann2@gmail.com	14	7	deposit	12
+sockmann2@gmail.com	15	8	deposit	12
+sockmann2@gmail.com	1	9	deposit	12
+sockmann2@gmail.com	1	10	withdrawal	12
+sockmann2@gmail.com	15	11	withdrawal	11111
+sockmann2@gmail.com	15	12	withdrawal	12
+sockmann2@gmail.com	15	13	withdrawal	12
+sockmann2@gmail.com	1	14	withdrawal	1
+sockmann2@gmail.com	15	15	deposit	11116
+sockmann2@gmail.com	15	16	withdrawal	5
+sockmann2@gmail.com	23	17	deposit	1000000
+sockmann2@gmail.com	23	18	withdrawal	99999
+testuser7@testtest.com	26	19	deposit	10
+testuser7@testtest.com	26	20	withdrawal	5
+testtest@test.com	27	21	deposit	100
+testtest@test.com	27	22	withdrawal	50
+demotest@gmail.com	28	23	deposit	1000
+demotest@gmail.com	28	24	withdrawal	500
+testdemo@demo.com	29	25	deposit	1000
+testdemo@demo.com	29	26	withdrawal	500
+testuser11@test.com	30	27	deposit	1000
+testuser11@test.com	30	28	withdrawal	500
+testuser11@test.com	30	29	deposit	100
+\.
+
+
